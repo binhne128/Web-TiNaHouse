@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TiNa House • Bảng (v3 – link mới)</title>
+
+<style>
+  :root { --brand:#12B7FF; --brand-dark:#0B8ED1; --border:#d6e6f2; --muted:#54647a; }
+  * { box-sizing:border-box }
+  body { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#0b1220; background:#fff }
+  header { position: sticky; top:0; z-index:10; background:linear-gradient(90deg, var(--brand), var(--brand-dark)); color:#fff; }
+  .wrap { max-width:1200px; margin:0 auto; padding:14px 16px; }
+  .title { font-weight:900; font-size:24px }
+  .subtitle { font-size:13px; opacity:.9 }
+  .tabs { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .tab { padding:8px 14px; background:#fff; color:#073a5b; border:1.5px solid var(--border); border-radius:999px; font-weight:800; cursor:pointer; }
+  .tab.active { background:#062f94; color:#fff; border-color:#062f94 }
+  .filters { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:10px; margin-top:10px; }
+  .filters input, .filters select { padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; }
+  .help {font-size:12px; color:#e9f6ff; padding:8px 0}
+  .muted { color:#54647a }
+  .err { background:#fff1f3; color:#b00020; border:1px solid #ffd0d6; padding:10px 12px; border-radius:10px; margin-top:10px }
+  @media (max-width:900px){ .filters { grid-template-columns:1fr 1fr } }
+  .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800 }
+  .pill.ok { background:#e6ffef; color:#007a33; border:1px solid #b8f5cf }
+  .pill.bad { background:#ffeff0; color:#b00020; border:1px solid #ffd0d3 }
+  .pill.blue { background:#e6f7ff; color:#055b8a; border:1px solid #c9eaff }
+</style>
+<script>
+const URL_ALL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIX7R256R4ZQaXi9oweljUcdX8r-GZFGmGUcaA715W8IaR-8cy__pW5unIi4kqtor8y_cGiyoZpXoU/pub?output=csv";
+
+function parseCSV(text){
+  const rows = []; let i=0, field='', row=[], inQuotes=false;
+  while (i < text.length){
+    const c = text[i];
+    if (inQuotes){
+      if (c === '"'){ if (text[i+1] === '"'){ field += '"'; i++; } else inQuotes = false; }
+      else field += c;
+    } else {
+      if (c === ','){ row.push(field); field=''; }
+      else if (c === '\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+      else if (c === '"') inQuotes = true;
+      else field += c;
+    }
+    i++;
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+function normalizeHeader(h){
+  return (h||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'_')
+    .replace(/^_|_$/g,'');
+}
+function mapHeaderVN(h){
+  const key = normalizeHeader(h);
+  const map = {
+    'danh_muc':'danh_muc',
+    'ten_san_pham':'ten_san_pham','ten_sanpham':'ten_san_pham',
+    'dong_san_pham':'dong_san_pham','dong_sp':'dong_san_pham',
+    'dung_luong':'dung_luong','bo_nho':'dung_luong',
+    'mau_sac':'mau_sac','mau':'mau_sac',
+    'ma_vung':'ma_vung','model':'ma_vung',
+    'xuat_xu':'xuat_xu','xuatxu':'xuat_xu',
+    'don_gia_vnd':'don_gia_vnd','don_gia':'don_gia_vnd','gia':'don_gia_vnd',
+    'tinh_trang':'tinh_trang','tinhtrang':'tinh_trang','status':'tinh_trang',
+    'phien_ban':'phien_ban','phienban':'phien_ban',
+    'ghi_chu_bh':'ghi_chu_bh','bao_hanh':'ghi_chu_bh',
+    'ghi_chu':'ghi_chu','ghichu':'ghi_chu'
+  };
+  return map[key] || key;
+}
+async function fetchAll(url){
+  if (!url) throw new Error("Thiếu URL CSV");
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("HTTP " + res.status + " khi tải CSV");
+  const text = await res.text();
+  const rows = parseCSV(text);
+  if (!rows.length) throw new Error("CSV rỗng");
+  const headers = rows[0].map(h => mapHeaderVN(h));
+  const out = rows.slice(1).filter(r => r.some(x => (x||'').trim().length)).map(r => {
+    const obj = {};
+    headers.forEach((h, idx) => obj[h] = (r[idx]||'').trim());
+    return obj;
+  });
+  return out;
+}
+function fmtPrice(v){ const n = parseFloat((v||'').replaceAll('.','').replaceAll(',','')); return (!isNaN(n) && n>0) ? n.toLocaleString('vi-VN') : '—'; }
+function badge(text, cls){ return '<span class="pill '+cls+'">'+text+'</span>'; }
+function statusPill(s){
+  if (!s) return '';
+  const t = s.toLowerCase();
+  if (t.includes("het")) return badge(s,"bad");
+  if (t.includes("con")) return badge(s,"ok");
+  if (t.includes("active")) return badge(s,"blue");
+  return s;
+}
+let ALL = [], CATS = [], currentCat = "";
+function buildTabs(){
+  const tabs = document.getElementById('tabs');
+  if (!tabs) return;
+  tabs.innerHTML = "";
+  CATS.forEach(c => {
+    const b = document.createElement('div');
+    b.className = 'tab';
+    b.textContent = c || 'Khác';
+    b.onclick = () => setCat(c);
+    tabs.appendChild(b);
+  });
+}
+function initFilters(){
+  const base = ALL.filter(r => !currentCat || (r.danh_muc||'') === currentCat);
+  const models = Array.from(new Set(base.map(x => x.ten_san_pham).filter(Boolean))).sort();
+  const origins = Array.from(new Set(base.map(x => x.xuat_xu).filter(Boolean))).sort();
+  const fModel = document.getElementById('fModel');
+  const fOrigin = document.getElementById('fOrigin');
+  if (fModel) {
+    fModel.innerHTML = '<option value="">Tất cả sản phẩm</option>';
+    models.forEach(m => fModel.insertAdjacentHTML('beforeend', "<option>"+m+"</option>"));
+  }
+  if (fOrigin) {
+    fOrigin.innerHTML = '<option value="">Tất cả xuất xứ</option>';
+    origins.forEach(o => fOrigin.insertAdjacentHTML('beforeend', "<option>"+o+"</option>"));
+  }
+}
+function filterRows(){
+  const base = ALL.filter(r => !currentCat || (r.danh_muc||'') === currentCat);
+  const q = (document.getElementById('q')?.value || '').toLowerCase().trim();
+  const m = document.getElementById('fModel')?.value || '';
+  const s = document.getElementById('fStatus')?.value || '';
+  const o = document.getElementById('fOrigin')?.value || '';
+  return base.filter(r => {
+    const hitQ = !q || Object.values(r).join(' ').toLowerCase().includes(q);
+    const hitM = !m || r.ten_san_pham === m;
+    const hitS = !s || (r.tinh_trang||'') === s;
+    const hitO = !o || r.xuat_xu === o;
+    return hitQ && hitM && hitS && hitO;
+  });
+}
+function setCat(c){
+  currentCat = c;
+  const tabs = document.getElementById('tabs');
+  if (tabs) [...tabs.children].forEach(x => x.classList.toggle('active', x.textContent === (c||'Khác')));
+  const title = document.getElementById('titleCat'); if (title) title.textContent = c || 'Danh mục';
+  initFilters();
+  if (window.renderTable) renderTable(filterRows());
+  if (window.renderCards) renderCards(filterRows());
+}
+async function boot(){
+  // today's date
+  const sub = document.querySelector('.subtitle .today');
+  if (sub) {
+    const d = new Date();
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yyyy = d.getFullYear();
+    sub.textContent = dd + '/' + mm + '/' + yyyy;
+  }
+  const ds = document.getElementById('dataSource'); if (ds) ds.textContent = URL_ALL;
+  const err = document.getElementById('err'); if (err) err.textContent = "";
+  try {
+    ALL = await fetchAll(URL_ALL);
+    CATS = Array.from(new Set(ALL.map(x => (x.danh_muc||'').trim()).filter(Boolean)));
+    if (CATS.length === 0) CATS = ["Tất cả"];
+    buildTabs();
+    setCat(CATS[0]);
+  } catch(e) {
+    if (err) err.textContent = "Không tải được dữ liệu CSV: " + e.message + ". Kiểm tra Publish CSV và quyền truy cập.";
+  }
+}
+window.addEventListener('DOMContentLoaded', boot);
+</script>
+
+<style>
+  main .card { background:#fff; border:1.5px solid var(--border); border-radius:14px; overflow:hidden; margin:16px 0; box-shadow:0 6px 18px rgba(18,183,255,.08); }
+  .card .titlebar { background:#E6F7FF; padding:10px 16px; font-weight:800; border-bottom:1px solid var(--border) }
+  table { width:100%; border-collapse: collapse; font-size:14px; }
+  th, td { padding:10px 8px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
+  tbody tr.groupname td { background:#f9fcff; font-weight:900; font-size:15px; color:#082947 }
+  tbody tr:hover { background:#f6fbff; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+      <div class="title">TiNa House</div>
+      <div class="subtitle">Bảng giá (Google Sheet) • Cập nhật: <span class="today"></span></div>
+    <div class="filters">
+      <input id="q" placeholder="Tìm kiếm (tên, màu, mã vùng...)" />
+      <select id="fModel"><option value="">Tất cả sản phẩm</option></select>
+      <select id="fStatus"><option value="">Tất cả tình trạng</option><option>Chưa Active</option><option>Còn hàng</option><option>HẾT RỒI</option></select>
+      <select id="fOrigin"><option value="">Tất cả xuất xứ</option></select>
+    </div>
+    <div class="help">Đang dùng link CSV: <span id="dataSource" style="opacity:.85"></span></div>
+    <div id="err" class="err"></div>
+    <div class="tabs" id="tabs" style="margin-top:10px"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card">
+    <div class="titlebar"><span id="titleCat">Danh mục</span></div>
+    <div style="overflow:auto">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th>Dòng/SP</th>
+            <th>Bộ nhớ</th>
+            <th>Màu</th>
+            <th>Đơn giá (VND)</th>
+            <th>Tình trạng</th>
+            <th>Phiên bản</th>
+            <th>Xuất xứ</th>
+            <th>Ghi chú</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div style="padding:10px 16px" class="muted">TiNa House</div>
+  </div>
+</main>
+<script>
+function renderTable(rows){
+  const tbody = document.querySelector("#tbl tbody");
+  let html = "";
+  rows.forEach(r => {
+    html += "<tr class='groupname'><td colspan='8'>"+(r.ten_san_pham || '')+"</td></tr>";
+    html += "<tr>"
+      + "<td>"+(r.dong_san_pham||'')+"</td>"
+      + "<td>"+(r.dung_luong||'')+"</td>"
+      + "<td>"+(r.mau_sac||'')+"</td>"
+      + "<td class='price'>"+fmtPrice(r.don_gia_vnd)+"</td>"
+      + "<td>"+statusPill(r.tinh_trang||'')+"</td>"
+      + "<td>"+(r.phien_ban||'')+"</td>"
+      + "<td>"+(r.xuat_xu||'')+(r.ma_vung?(" ("+r.ma_vung+")"):"")+"</td>"
+      + "<td>"+(r.ghi_chu_bh||r.ghi_chu||'')+"</td>"
+      + "</tr>";
+  });
+  tbody.innerHTML = html;
+}
+</script>
+</body>
+</html>
