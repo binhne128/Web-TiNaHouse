@@ -4,12 +4,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tina House • Bảng (v4)</title>
+<title>Cái tiệm bán táo by Tina House</title>
+  
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsSAAALEgHS3X78AAAB40lEQVR4nO2aMW7bQBBFZ0f2D8k0CwSEjDgJw5S0gJqVJgQWkJ5P4A0J4gG5p9aDkG8o3b2pC7h7n2z0u0i9d4v8K5w3zXK0G1p5b5+v1r2b8fjO5uR3w0mF8vQf9cQk5yq4vC6sL3i8Kj8VmlLZ8m7q1B2K1bQ3oWw7Cw4I5U6bJ3V6l3H2m7eyEo6Wb3Tt7JcV3KQkS6G0hU6m0L3X0d2vC2qV9IYh2m5JjG2kq3b6h1dBvV7MgdY4r5cV2l7Vv8pYk3v7YkJm0z1mJ1m3dWyfV3vY0kqYl4lJf3w1g2iWv9A1qWm9Xy0xJmJ7e3m3y0o9m1zYz3g9Wc6C7S6n6VqfRk3u1h8L9nJm3z8x5rOZQX3Sx3y4VwJ7kT7d2CkHPq2Jv0uQG6yq4o5Q8xT1z2aJg1v8b3hQ3+0c6K2m0Cwq3mJb3qO4QGz5qvD8y58S4rVx2z2t3d9Y6e9M1v0cQd9dD3xi1A722bQB67UCvbRuAXjvQa/vGA/Bf2Wl1acRkdtgAAAAASUVORK5CYII=" />
+  
 <style>
   :root { --brand:#12B7FF; --brand-dark:#0B8ED1; --border:#d6e6f2; --muted:#54647a; }
   * { box-sizing:border-box }
   body { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#0b1220; background:#fff }
-  header { position: sticky; top:0; z-index:10; background:linear-gradient(90deg, var(--brand), var(--brand-dark)); color:#fff; }
+  header { position: sticky; top:0; z-index:10; background:#DAF0F7; color:#004C70; }
   .wrap { max-width:1200px; margin:0 auto; padding:14px 16px; }
   .title { font-weight:900; font-size:24px }
   .subtitle { font-size:13px; opacity:.9 }
@@ -201,8 +204,22 @@ window.addEventListener('DOMContentLoaded', boot);
 <body>
 <header>
   <div class="wrap">
-      <div class="title">Tina House</div>
-      <div class="subtitle">Bảng giá (Google Sheet) • Cập nhật: <span class="today"></span></div>
+    <div style="display:flex;align-items:center;gap:14px;">
+  <div style="background:#fff;border-radius:16px;padding:8px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.1);">
+    <img src="logo.png" alt="logo" style="width:32px;height:32px;object-fit:contain;border-radius:8px;">
+  </div>
+  <div>
+    <div style="display:flex;align-items:center;gap:14px;">
+  <div style="background:#fff;border-radius:16px;padding:8px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.1);">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAABs7jvOAAAACXBIWXMAAAsSAAALEgHS3X78AA..." alt="logo" style="width:32px;height:32px;object-fit:contain;border-radius:8px;">
+  </div>
+  <div>
+    <div class="title">Cái tiệm bán táo by Tina House</div>
+    <div class="subtitle">Bảng giá • Cập nhật: <span class="today"></span></div>
+  </div>
+</div>
+  </div>
+</div>
     <div class="filters">
       <input id="q" placeholder="Tìm kiếm (tên, màu, mã vùng...)" />
       <select id="fModel"><option value="">Tất cả sản phẩm</option></select>
