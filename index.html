@@ -15,6 +15,16 @@
   header { position: sticky; top:0; z-index:10; background:#DAF0F7; color:#38B6FF; }
   .wrap { max-width:1200px; margin:0 auto; padding:14px 16px; }
   .title { font-weight:900; font-size:24px }
+  
+  .subtitle-small {
+  font-size: 60%;
+  font-style: italic;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-left: 6px;
+  color: #007AFF; /* xanh nhẹ kiểu Apple */
+}
+
   .subtitle { font-size:13px; opacity:.9 }
   .tabs { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
   .tab { padding:8px 14px; background:#fff; color:#073a5b; border:1.5px solid var(--border); border-radius:999px; font-weight:800; cursor:pointer; }
@@ -35,12 +45,7 @@
   th, td { padding:10px 8px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
   tbody tr.groupname td { background:#f9fcff; font-weight:900; font-size:15px; color:#082947 }
   tbody tr:hover { background:#f6fbff; }
-  .subtitle-small {
-  font-size: 60%;
-  font-weight: 600;
-  opacity: 0.9;
-  margin-left: 4px;
-}
+
 
 </style>
 <script>
@@ -213,7 +218,7 @@ window.addEventListener('DOMContentLoaded', boot);
   <div class="wrap">
     <div style="display:flex;align-items:center;gap:14px;">
       <div>
-        <div class="title">Cái tiệm bán táo <span class="subtitle-small">by Tina House</span></div>
+      <div class="title">Cái tiệm bán táo <span class="subtitle-small">• by Tina House</span></div>
 
         <div class="subtitle">Bảng giá • Cập nhật: <span class="today"></span></div>
       </div>
