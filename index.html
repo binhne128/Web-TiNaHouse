@@ -194,7 +194,17 @@
 const URL_ALL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScB3O9RHORztA1jt0R9IU74vKx19WcpMgh_N6eOU2uKcmczj44re7jb7KqF4Acz-gwCIgPNK3THJlF/pub?output=csv";
 
 // danh sách danh mục sẽ dùng cho tabs
-const CATS = ["AirPods","iPhone","iPad","Pencil","MacBook","Phụ kiện"];
+const CATS = [
+  "AirPods",
+  "iPad",
+  "iPhone",
+  "MacBook",
+  "Pencil",
+  "Apple Watch",
+  "Loa",
+  "Phụ kiện"
+];
+
 
 let ALL_ROWS = [];
 let CURRENT_CAT = "AirPods";
@@ -341,7 +351,7 @@ window.addEventListener('DOMContentLoaded',boot);
 <body>
   <header class="wrap">
     <div class="title">Cái tiệm bán táo <span class="subtitle-small">web demo</span></div>
-    <div class="subtitle">Bảng giá • Cập nhật: <span class="today"></span></div>
+ 
   </header>
 
   <main class="wrap">
