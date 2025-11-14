@@ -1,289 +1,375 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cái tiệm bán táo by Tina House</title>
-  
+<title>Cái tiệm bán táo – Web demo</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsSAAALEgHS3X78AAAB40lEQVR4nO2aMW7bQBBFZ0f2D8k0CwSEjDgJw5S0gJqVJgQWkJ5P4A0J4gG5p9aDkG8o3b2pC7h7n2z0u0i9d4v8K5w3zXK0G1p5b5+v1r2b8fjO5uR3w0mF8vQf9cQk5yq4vC6sL3i8Kj8VmlLZ8m7q1B2K1bQ3oWw7Cw4I5U6bJ3V6l3H2m7eyEo6Wb3Tt7JcV3KQkS6G0hU6m0L3X0d2vC2qV9IYh2m5JjG2kq3b6h1dBvV7MgdY4r5cV2l7Vv8pYk3v7YkJm0z1mJ1m3dWyfV3vY0kqYl4lJf3w1g2iWv9A1qWm9Xy0xJmJ7e3m3y0o9m1zYz3g9Wc6C7S6n6VqfRk3u1h8L9nJm3z8x5rOZQX3Sx3y4VwJ7kT7d2CkHPq2Jv0uQG6yq4o5Q8xT1z2aJg1v8b3hQ3+0c6K2m0Cwq3mJb3qO4QGz5qvD8y58S4rVx2z2t3d9Y6e9M1v0cQd9dD3xi1A722bQB67UCvbRuAXjvQa/vGA/Bf2Wl1acRkdtgAAAAASUVORK5CYII=" />
-  
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
+
 <style>
-  :root { --brand:#12B7FF; --brand-dark:#0B8ED1; --border:#d6e6f2; --muted:#54647a; }
-  * { box-sizing:border-box }
-  body { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#0b1220; background:#fff }
-  header { position: sticky; top:0; z-index:10; background:#DAF0F7; color:#38B6FF; }
-  .wrap { max-width:1200px; margin:0 auto; padding:14px 16px; }
-  .title { font-weight:900; font-size:24px }
-  
-.subtitle-small {
-  font-size: 60%;
-  font-weight: 600;
-  opacity: 0.9;
-  margin-left: 1.5px; 
-  letter-spacing: -0.2px; 
-  position: relative;
-  top: -0.5px; 
-}
+  :root{
+    --brand: #12B7FF;
+    --brand-dark: #0B8ED1;
+    --border: #d6e6f2;
+    --muted: #54647a;
+    --text: #0b1220;
+    --bg: #FFFFFF;
+    --header-bg: #DAF0F7;
+    --header-text: #38B6FF;
+    --card-titlebar: #E6F7FF;
+    --hover: #f6fbff;
+    --shadow-card: 0 6px 18px rgba(18, 183, 255, 0.08);
+    --ok-bg: #e6ffef;  --ok-text:#007a33;  --ok-border:#b8f5cf;
+    --bad-bg:#ffeff0;  --bad-text:#b00020; --bad-border:#ffd0d3;
+    --blue-bg:#e6f7ff; --blue-text:#055b8a; --blue-border:#c9eaff;
+    --radius-lg: 16px; --radius-sm: 10px;
+    --gap: 14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    overflow-x:hidden;
+  }
 
+  .wrap{max-width:1200px; margin:0 auto; padding:14px 16px}
 
-  .subtitle { font-size:13px; opacity:.9 }
-  .tabs { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
-  .tab { padding:8px 14px; background:#fff; color:#073a5b; border:1.5px solid var(--border); border-radius:999px; font-weight:800; cursor:pointer; }
-  .tab.active { background:#062f94; color:#fff; border-color:#062f94 }
-  .filters { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:10px; margin-top:10px; }
-  .filters input, .filters select { padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; }
-  .muted { color:#54647a }
-  .err { background:#fff1f3; color:#b00020; border:1px solid #ffd0d6; padding:10px 12px; border-radius:10px; margin-top:10px }
-  @media (max-width:900px){ .filters { grid-template-columns:1fr 1fr } }
-  .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800 }
-  .pill.ok { background:#e6ffef; color:#007a33; border:1px solid #b8f5cf }
-  .pill.bad { background:#ffeff0; color:#b00020; border:1px solid #ffd0d3 }
-  .pill.blue { background:#e6f7ff; color:#055b8a; border:1px solid #c9eaff }
-  .help, .linkbox { display:none }
-  main .card { background:#fff; border:1.5px solid var(--border); border-radius:14px; overflow:hidden; margin:16px 0; box-shadow:0 6px 18px rgba(18,183,255,.08); }
-  .card .titlebar { background:#E6F7FF; padding:10px 16px; font-weight:800; border-bottom:1px solid var(--border) }
-  table { width:100%; border-collapse: collapse; font-size:14px; }
-  th, td { padding:10px 8px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
-  tbody tr.groupname td { background:#f9fcff; font-weight:900; font-size:15px; color:#082947 }
-  tbody tr:hover { background:#f6fbff; }
+  header{
+    position:sticky; top:0; z-index:10;
+    background:var(--header-bg);
+    color:var(--header-text);
+    border-bottom:1px solid var(--border);
+    box-shadow:0 2px 6px rgba(0,0,0,0.04);
+  }
+  .title{
+    font-family: 'Comfortaa', system-ui, sans-serif;
+    font-weight:700;
+    font-size:24px;
+    color:#8dc4ef;
+  }
 
+  .subtitle-small{
+    font-size:60%; font-weight:600; opacity:.9;
+    margin-left:1.5px; letter-spacing:-.2px;
+    position:relative; top:-.5px;
+  }
+  .subtitle{font-size:13px; opacity:.9}
 
+  /* thanh tab chọn danh mục */
+  .tabs{
+    margin-top:14px;
+    margin-bottom:14px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .tab-btn{
+    border:none;
+    outline:none;
+    cursor:pointer;
+    padding:8px 18px;
+    border-radius:999px;
+    background:#ffffff;
+    color:#082947;
+    font-weight:700;
+    font-size:14px;
+    box-shadow:0 0 0 1px var(--border);
+    transition:all .15s ease;
+  }
+  .tab-btn:hover{
+    box-shadow:0 0 0 1px var(--brand-dark);
+  }
+  .tab-btn.active{
+    background:#123f9d;
+    color:#ffffff;
+    box-shadow:none;
+  }
+
+  .card{
+    background:#fff;
+    border:1.5px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:var(--shadow-card);
+  }
+  .card .titlebar{
+    background:var(--card-titlebar);
+    padding:10px 16px;
+    font-weight:800;
+    border-bottom:1px solid var(--border);
+    color:var(--brand-dark);
+  }
+  .table-wrap{
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+    table-layout:fixed;
+  }
+  th,td{
+    padding:10px 8px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    white-space:nowrap;
+  }
+  th{font-weight:800}
+  td.price{
+    text-align:center;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  tbody tr:hover{background:var(--hover)}
+  tbody tr.groupname td{
+    background:#f9fcff;
+    font-weight:900;
+    font-size:15px;
+    color:#082947;
+  }
+
+  .pill{
+    display:inline-block;
+    padding:2px 8px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+    white-space:nowrap;
+  }
+  .pill.ok{background:var(--ok-bg); color:var(--ok-text); border:1px solid var(--ok-border)}
+  .pill.bad{background:var(--bad-bg); color:var(--bad-text); border:1px solid var(--bad-border)}
+  .pill.blue{background:var(--blue-bg); color:var(--blue-text); border:1px solid var(--blue-border)}
+
+  /* Tỉ lệ 3 cột + căn giữa giá + xích ghi chú */
+  th:nth-child(1){ width:55%; }
+  th:nth-child(2){ width:26%; text-align:center; }
+  th:nth-child(3){ width:19%; text-align:right; }
+
+  td:nth-child(2){ 
+    text-align:center;
+  }
+  td:nth-child(3){
+    text-align:center;
+    padding-right:10px;
+  }
+  td:nth-child(3) .pill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:55px;
+    text-align:center;
+  }
+
+  /* Mobile */
+  @media (max-width:640px){
+    .wrap{padding:12px 10px;}
+
+    table{font-size:13px;}
+    th{font-size:12.5px;}
+
+    th,td{
+      padding:8px 4px;
+      white-space:nowrap;
+    }
+    td:first-child{
+      white-space:normal;
+      word-break:break-word;
+    }
+    th:nth-child(2){
+      text-align:center;
+    }
+    td:nth-child(2),
+    td:nth-child(3){
+      white-space:nowrap;
+    }
+  }
 </style>
+
 <script>
-const URL_ALL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIX7R256R4ZQaXi9oweljUcdX8r-GZFGmGUcaA715W8IaR-8cy__pW5unIi4kqtor8y_cGiyoZpXoU/pub?output=csv";
+const URL_ALL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScB3O9RHORztA1jt0R9IU74vKx19WcpMgh_N6eOU2uKcmczj44re7jb7KqF4Acz-gwCIgPNK3THJlF/pub?output=csv";
+
+// danh sách danh mục sẽ dùng cho tabs
+const CATS = ["AirPods","iPhone","iPad","Pencil","MacBook","Phụ kiện"];
+
+let ALL_ROWS = [];
+let CURRENT_CAT = "AirPods";
+
 function parseCSV(text){
-  const rows = []; let i=0, field='', row=[], inQuotes=false;
-  while (i < text.length){
-    const c = text[i];
-    if (inQuotes){
-      if (c === '"'){ if (text[i+1] === '"'){ field += '"'; i++; } else inQuotes = false; }
-      else field += c;
+  const rows=[]; let i=0, field='', row=[], inQuotes=false;
+  while(i<text.length){
+    const c=text[i];
+    if(inQuotes){
+      if(c==='"'){
+        if(text[i+1]==='"'){ field+='"'; i++; }
+        else inQuotes=false;
+      } else field+=c;
     } else {
-      if (c === ','){ row.push(field); field=''; }
-      else if (c === '\n'){ row.push(field); rows.push(row); row=[]; field=''; }
-      else if (c === '"') inQuotes = true;
-      else field += c;
+      if(c===','){ row.push(field); field=''; }
+      else if(c==='\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+      else if(c==='"'){ inQuotes=true; }
+      else field+=c;
     }
     i++;
   }
-  if (field.length || row.length) { row.push(field); rows.push(row); }
+  if(field.length||row.length){ row.push(field); rows.push(row); }
   return rows;
 }
 function normalizeHeader(h){
-  return (h||'').toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-z0-9]+/g,'_')
-    .replace(/^_|_$/g,'');
+  return (h||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
 }
 function mapHeaderVN(h){
-  const key = normalizeHeader(h);
-  const map = {
+  const key=normalizeHeader(h);
+  const map={
     'danh_muc':'danh_muc',
-    'ten_san_pham':'ten_san_pham','ten_sanpham':'ten_san_pham',
-    'dong_san_pham':'dong_san_pham','dong_sp':'dong_san_pham',
-    'dung_luong':'dung_luong','bo_nho':'dung_luong',
-    'mau_sac':'mau_sac','mau':'mau_sac',
-    'ma_vung':'ma_vung','model':'ma_vung',
-    'xuat_xu':'xuat_xu','xuatxu':'xuat_xu',
-    'don_gia_vnd':'don_gia_vnd','don_gia':'don_gia_vnd','gia':'don_gia_vnd',
-    'tinh_trang':'tinh_trang','tinhtrang':'tinh_trang','status':'tinh_trang',
-    'phien_ban':'phien_ban','phienban':'phien_ban',
-    'ghi_chu_bh':'ghi_chu_bh','bao_hanh':'ghi_chu_bh',
-    'ghi_chu':'ghi_chu','ghichu':'ghi_chu'
+    'dong_san_pham':'dong_san_pham',
+    'ten_san_pham':'ten_san_pham',
+    'don_gia_vnd':'don_gia_vnd',
+    'ghi_chu':'ghi_chu'
   };
-  return map[key] || key;
+  return map[key]||key;
 }
 async function fetchAll(url){
-  if (!url) throw new Error("Thiếu URL CSV");
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("HTTP " + res.status + " khi tải CSV");
-  const text = await res.text();
-  const rows = parseCSV(text);
-  if (!rows.length) throw new Error("CSV rỗng");
-  const headers = rows[0].map(h => mapHeaderVN(h));
-  const out = rows.slice(1).filter(r => r.some(x => (x||'').trim().length)).map(r => {
-    const obj = {};
-    headers.forEach((h, idx) => obj[h] = (r[idx]||'').trim());
-    return obj;
-  });
-  return out;
+  const res=await fetch(url,{cache:'no-store'});
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const text=await res.text();
+  const rows=parseCSV(text);
+  const headers=rows[0].map(mapHeaderVN);
+  return rows.slice(1)
+    .filter(r=>r.some(x=>(x||'').trim().length))
+    .map(r=>{
+      const o={};
+      headers.forEach((h,i)=>o[h]=(r[i]||'').trim());
+      return o;
+    });
 }
-function fmtPrice(v){ const n = parseFloat((v||'').replaceAll('.','').replaceAll(',','')); return (!isNaN(n) && n>0) ? n.toLocaleString('vi-VN') : '—'; }
-function badge(text, cls){ return '<span class="pill '+cls+'">'+text+'</span>'; }
-function statusPill(s){
-  if (!s) return '';
-  const t = s.toLowerCase();
-  if (t.includes("het")) return badge(s,"bad");
-  if (t.includes("con")) return badge(s,"ok");
-  if (t.includes("active")) return badge(s,"blue");
-  return s;
+function fmtPrice(v){
+  const cleaned=(v||'').toString().replace(/[.,]/g,'');
+  const n=parseFloat(cleaned);
+  return (!isNaN(n)&&n>0)? n.toLocaleString('vi-VN'):'—';
 }
-let ALL = [], CATS = [], currentCat = "";
-function buildTabs(){
-  const tabs = document.getElementById('tabs');
-  if (!tabs) return;
-  tabs.innerHTML = "";
-  CATS.forEach(c => {
-    const b = document.createElement('div');
-    b.className = 'tab';
-    b.textContent = c || 'Khác';
-    b.onclick = () => setCat(c);
-    tabs.appendChild(b);
-  });
+function badge(text){
+  if(!text) return '';
+  const t=text.toLowerCase();
+  if(t.includes('hết')) return `<span class='pill bad'>${text}</span>`;
+  if(t.includes('còn')) return `<span class='pill ok'>${text}</span>`;
+  return `<span class='pill blue'>${text}</span>`;
 }
-function initFilters(){
-  const base = ALL.filter(r => !currentCat || (r.danh_muc||'') === currentCat);
-  const models = Array.from(new Set(base.map(x => x.ten_san_pham).filter(Boolean))).sort();
-  const origins = Array.from(new Set(base.map(x => x.xuat_xu).filter(Boolean))).sort();
-  const fModel = document.getElementById('fModel');
-  const fOrigin = document.getElementById('fOrigin');
-  if (fModel) {
-    fModel.innerHTML = '<option value="">Tất cả sản phẩm</option>';
-    models.forEach(m => fModel.insertAdjacentHTML('beforeend', "<option>"+m+"</option>"));
+
+function renderBoardFor(cat){
+  const tbody=document.querySelector('#board-main tbody');
+  const titlebar=document.querySelector('#board-main .titlebar');
+  titlebar.textContent = cat;
+
+  const rows = ALL_ROWS.filter(
+    x => (x.danh_muc || '').toLowerCase() === cat.toLowerCase()
+  );
+
+  if(!rows.length){
+    tbody.innerHTML = `<tr><td colspan="3">Chưa có dữ liệu cho danh mục này.</td></tr>`;
+    return;
   }
-  if (fOrigin) {
-    fOrigin.innerHTML = '<option value="">Tất cả xuất xứ</option>';
-    origins.forEach(o => fOrigin.insertAdjacentHTML('beforeend', "<option>"+o+"</option>"));
-  }
-}
-function baseName(name){
-  if(!name) return '';
-  let s = name;
-  s = s.replace(/\s+M\d+.*$/i,''); // remove ' Mx ...'
-  s = s.replace(/\s+\d{1,2}(\.\d+)?\s*("|”|in|inch).*/i,''); // remove size like 11"
-  return s.trim();
-}
-function variantLabel(row){
-  if (row.dong_san_pham) return row.dong_san_pham;
-  const t = row.ten_san_pham || '';
-  const b = baseName(t);
-  const rest = t.startsWith(b) ? t.slice(b.length).trim() : '';
-  return rest || t;
-}
-function groupByBase(rows){
-  const groups = {};
-  rows.forEach(r => {
-    const key = baseName(r.ten_san_pham||'') || (r.ten_san_pham||'') || 'Sản phẩm';
-    if(!groups[key]) groups[key] = [];
-    groups[key].push(r);
+
+  const groups={};
+  rows.forEach(r=>{
+    const g=(r.dong_san_pham||'Khác').trim();
+    if(!groups[g]) groups[g]=[];
+    groups[g].push(r);
   });
-  return groups;
+  const ordered=Object.keys(groups).sort((a,b)=>a.localeCompare(b,'vi',{sensitivity:'base'}));
+  let html='';
+  ordered.forEach(g=>{
+    html+=`<tr class='groupname'><td colspan='3'>${g}</td></tr>`;
+    groups[g].forEach(r=>{
+      html+=`<tr>
+        <td>${r.ten_san_pham||''}</td>
+        <td class='price'>${fmtPrice(r.don_gia_vnd)}</td>
+        <td>${badge(r.ghi_chu)}</td>
+      </tr>`;
+    });
+  });
+  tbody.innerHTML=html;
 }
-function filterRows(){
-  const base = ALL.filter(r => !currentCat || (r.danh_muc||'') === currentCat);
-  const q = (document.getElementById('q')?.value || '').toLowerCase().trim();
-  const m = document.getElementById('fModel')?.value || '';
-  const s = document.getElementById('fStatus')?.value || '';
-  const o = document.getElementById('fOrigin')?.value || '';
-  return base.filter(r => {
-    const hitQ = !q || Object.values(r).join(' ').toLowerCase().includes(q);
-    const hitM = !m || r.ten_san_pham === m;
-    const hitS = !s || (r.tinh_trang||'') === s;
-    const hitO = !o || r.xuat_xu === o;
-    return hitQ && hitM && hitS && hitO;
+
+function setupTabs(){
+  const container = document.querySelector('.tabs');
+  container.innerHTML = CATS.map((cat,idx)=>`
+    <button class="tab-btn ${idx===0?'active':''}" data-cat="${cat}">${cat}</button>
+  `).join('');
+
+  container.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const cat = btn.dataset.cat;
+      CURRENT_CAT = cat;
+
+      container.querySelectorAll('.tab-btn').forEach(b=>{
+        b.classList.toggle('active', b === btn);
+      });
+
+      renderBoardFor(cat);
+    });
   });
 }
-function setCat(c){
-  currentCat = c;
-  const tabs = document.getElementById('tabs');
-  if (tabs) [...tabs.children].forEach(x => x.classList.toggle('active', x.textContent === (c||'Khác')));
-  const title = document.getElementById('titleCat'); if (title) title.textContent = c || 'Danh mục';
-  initFilters();
-  renderTable(filterRows());
-}
+
 async function boot(){
-  const sub = document.querySelector('.subtitle .today');
-  if (sub) {
-    const d = new Date();
-    const dd = String(d.getDate()).padStart(2,'0');
-    const mm = String(d.getMonth()+1).padStart(2,'0');
-    const yyyy = d.getFullYear();
-    sub.textContent = dd + '/' + mm + '/' + yyyy;
-  }
-  const err = document.getElementById('err'); if (err) err.textContent = "";
-  try {
-    ALL = await fetchAll(URL_ALL);
-    CATS = Array.from(new Set(ALL.map(x => (x.danh_muc||'').trim()).filter(Boolean)));
-    if (CATS.length === 0) CATS = ["Tất cả"];
-    buildTabs();
-    setCat(CATS[0]);
-  } catch(e) {
-    if (err) err.textContent = "Không tải được dữ liệu CSV: " + e.message + ". Kiểm tra Publish CSV và quyền truy cập.";
+  const d=new Date();
+  document.querySelector('.today').textContent=
+    `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+
+  // text "đang tải" tạm
+  document.querySelector('#board-main tbody').innerHTML =
+    `<tr><td colspan="3">Đang tải dữ liệu…</td></tr>`;
+
+  try{
+    ALL_ROWS = await fetchAll(URL_ALL);
+    setupTabs();
+    renderBoardFor(CURRENT_CAT);
+  }catch(e){
+    console.error(e);
+    document.querySelector('#board-main tbody').innerHTML =
+      `<tr><td colspan="3">Không tải được dữ liệu, bạn F5 lại giúp mình nha.</td></tr>`;
   }
 }
-window.addEventListener('DOMContentLoaded', boot);
+window.addEventListener('DOMContentLoaded',boot);
 </script>
 </head>
+
 <body>
-<header>
-  <div class="wrap">
-    <div style="display:flex;align-items:center;gap:14px;">
-      <div>
-      <div class="title">Cái tiệm bán táo <span class="subtitle-small">by Tina House</span></div>
+  <header class="wrap">
+    <div class="title">Cái tiệm bán táo <span class="subtitle-small">web demo</span></div>
+    <div class="subtitle">Bảng giá • Cập nhật: <span class="today"></span></div>
+  </header>
 
+  <main class="wrap">
 
-        <div class="subtitle">Bảng giá • Cập nhật: <span class="today"></span></div>
+    <!-- ✅ Thanh chọn danh mục -->
+    <div class="tabs">
+      <!-- JS sẽ tự fill 6 nút từ mảng CATS -->
+    </div>
+
+    <!-- ✅ Chỉ còn 1 card, nội dung thay đổi theo tab -->
+    <div class="card" id="board-main">
+      <div class="titlebar">AirPods</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Đơn giá (VND)</th>
+              <th>Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- JS render -->
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <div class="filters">
-      <input id="q" placeholder="Tìm kiếm (tên, màu, mã vùng...)" />
-      <select id="fModel"><option value="">Tất cả sản phẩm</option></select>
-      <select id="fStatus"><option value="">Tất cả tình trạng</option><option>Chưa Active</option><option>Còn hàng</option><option>HẾT RỒI</option></select>
-      <select id="fOrigin"><option value="">Tất cả xuất xứ</option></select>
-    </div>
-   
-    <div class="tabs" id="tabs" style="margin-top:10px"></div>
-  </div>
-</header>
-<main class="wrap">
-  <div class="card">
-    <div class="titlebar"><span id="titleCat">Danh mục</span></div>
-    <div style="overflow:auto">
-      <table id="tbl">
-        <thead>
-          <tr>
-            <th>Dòng/SP</th>
-            <th>Bộ nhớ</th>
-            <th>Màu</th>
-            <th>Đơn giá (VND)</th>
-            <th>Tình trạng</th>
-            <th>Phiên bản</th>
-            <th>Xuất xứ</th>
-            <th>Ghi chú</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <div style="padding:10px 16px" class="muted">Tina House</div>
-  </div>
-</main>
-<script>
-function renderTable(rows){
-  const tbody = document.querySelector("#tbl tbody");
-  const groups = groupByBase(rows);
-  let html = "";
-  Object.keys(groups).forEach(g => {
-    html += "<tr class='groupname'><td colspan='8'>"+g+"</td></tr>";
-    groups[g].forEach(r => {
-      html += "<tr>"
-        + "<td>"+(variantLabel(r)||'')+"</td>"
-        + "<td>"+(r.dung_luong||'')+"</td>"
-        + "<td>"+(r.mau_sac||'')+"</td>"
-        + "<td class='price'>"+fmtPrice(r.don_gia_vnd)+"</td>"
-        + "<td>"+statusPill(r.tinh_trang||'')+"</td>"
-        + "<td>"+(r.phien_ban||'')+"</td>"
-        + "<td>"+(r.xuat_xu||'')+(r.ma_vung?(" ("+r.ma_vung+")"):"")+"</td>"
-        + "<td>"+(r.ghi_chu_bh||r.ghi_chu||'')+"</td>"
-        + "</tr>";
-    });
-  });
-  tbody.innerHTML = html;
-}
-</script>
+  </main>
 </body>
 </html>
-
-
