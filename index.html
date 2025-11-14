@@ -206,6 +206,7 @@ const CATS = [
 ];
 
 
+
 let ALL_ROWS = [];
 let CURRENT_CAT = "AirPods";
 
@@ -271,39 +272,46 @@ function badge(text){
 }
 
 function renderBoardFor(cat){
-  const tbody=document.querySelector('#board-main tbody');
-  const titlebar=document.querySelector('#board-main .titlebar');
+  const tbody = document.querySelector('#board-main tbody');
+  const titlebar = document.querySelector('#board-main .titlebar');
   titlebar.textContent = cat;
 
-  const rows = ALL_ROWS.filter(
-    x => (x.danh_muc || '').toLowerCase() === cat.toLowerCase()
-  );
+  // chuẩn hóa key cần tìm
+  const key = cat.toLowerCase().trim();
+
+  // lọc theo danh_muc (đã lowerCase + trim khoảng trắng)
+  const rows = ALL_ROWS.filter(x => {
+    const dm = (x.danh_muc || '').toLowerCase().trim();
+    return dm === key;
+  });
 
   if(!rows.length){
     tbody.innerHTML = `<tr><td colspan="3">Chưa có dữ liệu cho danh mục này.</td></tr>`;
     return;
   }
 
-  const groups={};
+  const groups = {};
   rows.forEach(r=>{
-    const g=(r.dong_san_pham||'Khác').trim();
+    const g = (r.dong_san_pham || 'Khác').trim();
     if(!groups[g]) groups[g]=[];
     groups[g].push(r);
   });
-  const ordered=Object.keys(groups).sort((a,b)=>a.localeCompare(b,'vi',{sensitivity:'base'}));
-  let html='';
+  const ordered = Object.keys(groups).sort((a,b)=>a.localeCompare(b,'vi',{sensitivity:'base'}));
+
+  let html = '';
   ordered.forEach(g=>{
-    html+=`<tr class='groupname'><td colspan='3'>${g}</td></tr>`;
+    html += `<tr class='groupname'><td colspan='3'>${g}</td></tr>`;
     groups[g].forEach(r=>{
-      html+=`<tr>
-        <td>${r.ten_san_pham||''}</td>
+      html += `<tr>
+        <td>${r.ten_san_pham || ''}</td>
         <td class='price'>${fmtPrice(r.don_gia_vnd)}</td>
         <td>${badge(r.ghi_chu)}</td>
       </tr>`;
     });
   });
-  tbody.innerHTML=html;
+  tbody.innerHTML = html;
 }
+
 
 function setupTabs(){
   const container = document.querySelector('.tabs');
