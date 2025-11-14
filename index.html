@@ -334,10 +334,6 @@ function setupTabs(){
 }
 
 async function boot(){
-  const d=new Date();
-  document.querySelector('.today').textContent=
-    `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-
   // text "đang tải" tạm
   document.querySelector('#board-main tbody').innerHTML =
     `<tr><td colspan="3">Đang tải dữ liệu…</td></tr>`;
@@ -352,6 +348,7 @@ async function boot(){
       `<tr><td colspan="3">Không tải được dữ liệu, bạn F5 lại giúp mình nha.</td></tr>`;
   }
 }
+
 window.addEventListener('DOMContentLoaded',boot);
 </script>
 </head>
