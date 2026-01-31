@@ -331,15 +331,22 @@ function renderBoardFor(cat){
   }
 
   const groups = {};
+  const groupOrder = []; // Mảng này dùng để lưu thứ tự xuất hiện trong Sheet
+
   rows.forEach(r=>{
     const g = (r.dong_san_pham || 'Khác').trim();
-    if(!groups[g]) groups[g]=[];
+    
+    // Nếu đây là lần đầu tiên gặp nhóm này -> Lưu tên nó vào danh sách thứ tự
+    if(!groups[g]) {
+        groups[g]=[];
+        groupOrder.push(g); 
+    }
     groups[g].push(r);
   });
-  const ordered = Object.keys(groups).sort((a,b)=>a.localeCompare(b,'vi',{sensitivity:'base'}));
 
   let html = '';
-  ordered.forEach(g=>{
+  // Duyệt theo danh sách groupOrder đã lưu (theo thứ tự trong Sheet)
+  groupOrder.forEach(g=>{
     html += `<tr class='groupname'><td colspan='3'>${g}</td></tr>`;
     groups[g].forEach(r=>{
       html += `<tr>
