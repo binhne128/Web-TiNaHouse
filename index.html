@@ -3,7 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cái tiệm bán táo – by Tina House</title>
+
+<title>Cái tiệm bán táo - Cập nhật giá Apple tốt nhất by Tina House</title>
+
+<meta name="description" content="Chuyên cập nhật bảng giá iPhone, iPad, AirPods, MacBook mới nhất mỗi ngày. Hàng chất lượng, uy tín, giá tốt nhất thị trường. Liên hệ Tina House: 0923453003.">
+<meta name="keywords" content="iphone giá rẻ, bảng giá iphone, ipad giá rẻ, tina house, cái tiệm bán táo, airpods giá tốt">
+
+<meta property="og:title" content="Cái tiệm bán táo - Giá tốt nhất by Tina House">
+<meta property="og:description" content="Xem ngay bảng giá iPhone, iPad, AirPods cập nhật mới nhất hôm nay.">
+<meta property="og:image" content="https://binhne128.github.io/webdemo/Logo.jpeg">
+<meta property="og:url" content="https://binhne128.github.io/webdemo/">
+<meta property="og:type" content="website">
 
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -42,10 +52,9 @@
   }
   .title-area { display: flex; align-items: center; gap: 12px; }
   
-  /* ⭐ LOGO STYLE */
+  /* LOGO STYLE */
   .logo-img {
-    height: 55px; /* Chiều cao trên máy tính */
-    width: auto;
+    height: 55px; width: auto;
     border-radius: 8px; 
     box-shadow: 0 2px 5px rgba(18, 183, 255, 0.2); 
     object-fit: contain;
@@ -96,10 +105,8 @@
   td.price{ text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap; }
   tbody tr:hover{background:var(--hover)}
   
-  /* Nhóm sản phẩm */
   tbody tr.groupname td{ background:#f9fcff; font-weight:900; font-size:15px; color:#082947; }
 
-  /* Nhãn (Mới, Còn hàng...) */
   .pill{
     display:inline-block; padding:2px 8px;
     border-radius:999px; font-size:12px; font-weight:800; white-space:nowrap;
@@ -108,7 +115,6 @@
   .pill.bad{background:var(--bad-bg); color:var(--bad-text); border:1px solid var(--bad-border)}
   .pill.blue{background:var(--blue-bg); color:var(--blue-text); border:1px solid var(--blue-border)}
 
-  /* Căn chỉnh cột */
   th:nth-child(1){ width:55%; }
   th:nth-child(2){ width:26%; text-align:center; }
   th:nth-child(3){ width:19%; text-align:center; }
@@ -118,7 +124,7 @@
     min-width:55px; text-align:center;
   }
 
-  /* ⭐ MOBILE RESPONSIVE */
+  /* MOBILE RESPONSIVE */
   @media (max-width:640px){
     .wrap{padding:12px 10px;}
     .logo-img { height: 45px; } 
@@ -145,10 +151,8 @@
 </style>
 
 <script>
-// LINK GOOGLE SHEET (CSV)
 const URL_ALL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScB3O9RHORztA1jt0R9IU74vKx19WcpMgh_N6eOU2uKcmczj44re7jb7KqF4Acz-gwCIgPNK3THJlF/pub?output=csv";
 
-// DANH SÁCH DANH MỤC
 const CATS = ["AirPods", "iPad", "iPhone", "MacBook", "Pencil", "Apple Watch", "Loa", "Phụ kiện"];
 
 let ALL_ROWS = [];
