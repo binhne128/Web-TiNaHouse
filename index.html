@@ -7,6 +7,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;700&display=swap" rel="stylesheet">
 
+<link rel="icon" type="image/jpeg" href="Logo.jpeg" style="border-radius: 50%;" />
+
 <style>
   :root{
     --brand: #12B7FF;
@@ -38,14 +40,25 @@
     border-bottom:1px solid var(--border);
     box-shadow:0 2px 6px rgba(0,0,0,0.04);
   }
-  .title-area { display: flex; align-items: center; gap: 10px; }
+  .title-area { display: flex; align-items: center; gap: 12px; }
+  
+  /* ⭐ LOGO STYLE */
+  .logo-img {
+    height: 55px; /* Chiều cao trên máy tính */
+    width: auto;
+    border-radius: 8px; 
+    box-shadow: 0 2px 5px rgba(18, 183, 255, 0.2); 
+    object-fit: contain;
+  }
+
   .title{
     font-family: 'Comfortaa', system-ui, sans-serif;
     font-weight:700; font-size:24px; color:#8dc4ef;
+    line-height: 1.2;
   }
   .subtitle-small{
-    font-size:60%; font-weight:600; opacity:.9;
-    margin-left:1.5px; letter-spacing:-.2px; position:relative; top:-.5px;
+    font-size:65%; font-weight:600; opacity:.9;
+    margin-left:2px; letter-spacing:-.2px; display:inline-block;
   }
 
   /* TABS */
@@ -70,7 +83,6 @@
     border-bottom:1px solid var(--border); color:var(--brand-dark);
     display:flex; justify-content:space-between; align-items:center;
   }
-  /* Thêm hiệu ứng nhấp nháy nhẹ khi update */
   @keyframes flash { 0%{opacity:1} 50%{opacity:0.5} 100%{opacity:1} }
   .updating .table-wrap { animation: flash 0.5s ease; }
 
@@ -106,9 +118,12 @@
     min-width:55px; text-align:center;
   }
 
-  /* Mobile */
+  /* ⭐ MOBILE RESPONSIVE */
   @media (max-width:640px){
     .wrap{padding:12px 10px;}
+    .logo-img { height: 45px; } 
+    .title { font-size: 22px; }
+    .title-area { gap: 10px; }
     table{font-size:13px;}
     th,td{ padding:8px 4px; white-space:nowrap; }
     td:first-child{ white-space:normal; word-break:break-word; }
@@ -126,7 +141,6 @@
   .contact-info a{ color:#0B8ED1; font-weight:700; text-decoration:none; }
   .contact-info a:hover{ text-decoration:underline; }
   
-  /* Text nhỏ hiển thị trạng thái update */
   .status-text { font-size: 11px; font-weight: normal; opacity: 0.7; color: #54647a; }
 </style>
 
@@ -139,7 +153,7 @@ const CATS = ["AirPods", "iPad", "iPhone", "MacBook", "Pencil", "Apple Watch", "
 
 let ALL_ROWS = [];
 let CURRENT_CAT = "AirPods";
-let TIMER = null; // Biến giữ đồng hồ đếm ngược
+let TIMER = null; 
 
 function parseCSV(text){
   const rows=[]; let i=0, field='', row=[], inQuotes=false;
@@ -167,9 +181,7 @@ function mapHeaderVN(h){
 }
 
 async function fetchAll(url){
-  // Thêm timestamp để tránh Cache (bắt buộc tải mới)
   const noCacheUrl = url + "&t=" + Date.now();
-  
   const res=await fetch(noCacheUrl,{cache:'no-store'});
   if(!res.ok) throw new Error('HTTP '+res.status);
   const text=await res.text();
@@ -249,40 +261,25 @@ function setupTabs(){
   });
 }
 
-// HÀM TỰ ĐỘNG CẬP NHẬT (CHẠY NGẦM)
 async function autoUpdateSilent(){
   const statusEl = document.querySelector('.status-text');
   try {
-    // console.log("Đang kiểm tra giá mới...");
     const newRows = await fetchAll(URL_ALL);
-    
-    // So sánh sơ bộ xem số lượng dòng có thay đổi không (hoặc gán luôn cũng được)
-    // Ở đây gán luôn cho chắc ăn
     ALL_ROWS = newRows;
-    
-    // Render lại giao diện
     renderBoardFor(CURRENT_CAT);
-    
-    // Báo update thành công (nhỏ thôi)
-    if(statusEl) statusEl.textContent = "Đã cập nhật: " + new Date().toLocaleTimeString('vi-VN');
-    
+    if(statusEl) statusEl.textContent = "Cập nhật: " + new Date().toLocaleTimeString('vi-VN');
   } catch(e) {
     console.log("Lỗi cập nhật ngầm: " + e);
-    // Lỗi thì bỏ qua, đợi lần sau, không hiện lỗi lên màn hình làm khách sợ
   }
 }
 
 async function boot(){
   document.querySelector('#board-main tbody').innerHTML = `<tr><td colspan="3">Đang tải dữ liệu…</td></tr>`;
   try{
-    // Lần tải đầu tiên
     ALL_ROWS = await fetchAll(URL_ALL);
     setupTabs();
     renderBoardFor(CURRENT_CAT);
-    
-    // SET THỜI GIAN TỰ CẬP NHẬT: 60 giây (60000ms) một lần
     TIMER = setInterval(autoUpdateSilent, 60000);
-    
   }catch(e){
     console.error(e);
     document.querySelector('#board-main tbody').innerHTML = `<tr><td colspan="3">Không tải được dữ liệu, bạn F5 lại giúp mình nha.</td></tr>`;
@@ -296,6 +293,12 @@ window.addEventListener('DOMContentLoaded',boot);
 <body>
   <header class="wrap">
     <div class="title-area">
+       <img 
+         src="Logo.jpeg" 
+         alt="Logo Cái Tiệm Bán Táo" 
+         class="logo-img" 
+       />
+       
        <div class="title">Cái tiệm bán táo <span class="subtitle-small">by Tina House</span></div>
     </div>
 
